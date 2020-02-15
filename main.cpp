@@ -385,11 +385,39 @@ NEXT:
 
 //#define BASE_MODE   1
 
+// Turn hex to bin
+
+#define HEX_BIN 1
+
 
 int main(int argc, char *argv[])
 {
     (void)argc;
     (void)argv;
+
+#if HEX_BIN == 1
+    QFile fileHex(argv[1]);
+    QFile fileBin(QString(argv[1]).replace(".hex", ".bin"));
+    QByteArray ba;
+
+    fileHex.open(QFile::ReadOnly);
+    fileBin.open(QFile::WriteOnly);
+
+    ba.clear();
+
+    do {
+        fileBin.write(ba);
+        ba = QByteArray::fromHex(fileHex.readLine());
+    } while(!ba.isEmpty());
+
+    fileHex.close();
+    fileBin.flush();
+    fileBin.close();
+
+    return 0;
+#endif
+
+#if HEX_BIN == 0
     QImage baseImage;
 
 #if BASE_MODE == 0
@@ -464,5 +492,6 @@ int main(int argc, char *argv[])
     //delete [] buf;
     //delete [] indexTable;
     return 0;
+#endif
 #endif
 }
