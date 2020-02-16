@@ -8,10 +8,10 @@
 using namespace std;
 
 typedef struct {
-    uchar blue;
-    uchar green;
-    uchar red;
-    uchar alpha;
+	uchar blue;
+	uchar green;
+	uchar red;
+	uchar alpha;
 } color_t;
 
 const color_t *pix_00;
@@ -30,350 +30,350 @@ int baseLen;
 
 void test_print(int xStart, int yStart, int xMax, int yMax)
 {
-    int x, y;
-    const color_t *pix;
+	int x, y;
+	const color_t *pix;
 
-    cout << "First Print:" << endl;
-    cout << "    ";
+	cout << "First Print:" << endl;
+	cout << "    ";
 
-    for(x = xStart; x < xMax; x++)
-    {
-        if(x % 0x04)
-        {
-            cout << "+";
-        }
-        else
-        {
-            cout << (x / 0x04);
-        }
-    }
+	for(x = xStart; x < xMax; x++)
+	{
+		if(x % 0x04)
+		{
+			cout << "+";
+		}
+		else
+		{
+			cout << (x / 0x04);
+		}
+	}
 
-    cout << endl;
+	cout << endl;
 
-    for(y = height-1-yMax; y < height-yStart; y++)
-    {
-        pix = y * width + pix_00 + xStart;
-        cout << setw(4) << y;
+	for(y = height-1-yMax; y < height-yStart; y++)
+	{
+		pix = y * width + pix_00 + xStart;
+		cout << setw(4) << y;
 
-        for(x = xStart; x < xMax; x++)
-        {
-            if(pix->blue > 0x7F)
-            {
-                cout << '.';
-            }
-            else
-            {
-                cout << '#';
-            }
+		for(x = xStart; x < xMax; x++)
+		{
+			if(pix->blue > 0x7F)
+			{
+				cout << '.';
+			}
+			else
+			{
+				cout << '#';
+			}
 
-            pix++;
-        }
+			pix++;
+		}
 
-        cout << endl;
-    }
+		cout << endl;
+	}
 }
 
 void print_char(int row, int column, int num)
 {
-    int x, y;
-    int xTmp, yTmp;
-    int xMax, yMax;
-    const color_t *pix;
+	int x, y;
+	int xTmp, yTmp;
+	int xMax, yMax;
+	const color_t *pix;
 
-    xTmp = column * charX + startX;
-    xMax = xTmp + charX * num;
-    yTmp = row * charY + startY;
-    yMax = yTmp + charY;
+	xTmp = column * charX + startX;
+	xMax = xTmp + charX * num;
+	yTmp = row * charY + startY;
+	yMax = yTmp + charY;
 
-    for(y = yTmp; y < yMax; y++)
-    {
-        pix = pix_00 + y * width + xTmp;
+	for(y = yTmp; y < yMax; y++)
+	{
+		pix = pix_00 + y * width + xTmp;
 
-        for(x = xTmp; x < xMax; x++)
-        {
-            if(pix->blue > 0x7F)
-            {
-                cout << '.';
-            }
-            else
-            {
-                cout << '#';
-            }
+		for(x = xTmp; x < xMax; x++)
+		{
+			if(pix->blue > 0x7F)
+			{
+				cout << '.';
+			}
+			else
+			{
+				cout << '#';
+			}
 
-            pix++;
-        }
+			pix++;
+		}
 
-        cout << endl;
-    }
+		cout << endl;
+	}
 }
 
 void get_char(int row, int column, uint32_t *buf)
 {
-    int x, y;
-    int xTmp, yTmp;
-    int xMax, yMax;
-    const color_t *pix;
-    const color_t *pixTmp;
+	int x, y;
+	int xTmp, yTmp;
+	int xMax, yMax;
+	const color_t *pix;
+	const color_t *pixTmp;
 
-    xTmp = column * charX + startX;
-    xMax = charX;
-    yTmp = row * charY + startY;
-    yMax = charY;
+	xTmp = column * charX + startX;
+	xMax = charX;
+	yTmp = row * charY + startY;
+	yMax = charY;
 
-    for(x = 0; x < charX; x++)
-    {
-        buf[x] = 0;
-    }
+	for(x = 0; x < charX; x++)
+	{
+		buf[x] = 0;
+	}
 
-    pixTmp = pix_00 + xTmp + yTmp * width;
+	pixTmp = pix_00 + xTmp + yTmp * width;
 
-    for(y = 0; y < yMax; y++)
-    {
-        pix = pixTmp;
+	for(y = 0; y < yMax; y++)
+	{
+		pix = pixTmp;
 
-        for(x = 0; x < xMax; x++)
-        {
-            buf[indexTable[x]] <<= 1;
+		for(x = 0; x < xMax; x++)
+		{
+			buf[indexTable[x]] <<= 1;
 
-            if(pix->blue < 0x7F)
-            { // Block pix.
-                buf[indexTable[x]] |= 1;
-            }
+			if(pix->blue < 0x7F)
+			{ // Block pix.
+				buf[indexTable[x]] |= 1;
+			}
 
-            pix++;
-        }
+			pix++;
+		}
 
-        pixTmp += width;
-    }
+		pixTmp += width;
+	}
 }
 
 void get_char_print(const uint32_t *buf)
 {
-    int i, j;
-    int tmp;
-    uint32_t *bufTmp1;
+	int i, j;
+	int tmp;
+	uint32_t *bufTmp1;
 
-    bufTmp1 = new uint32_t [charX];
-    memcpy(bufTmp1, buf, sizeof(uint32_t)*charX);
+	bufTmp1 = new uint32_t [charX];
+	memcpy(bufTmp1, buf, sizeof(uint32_t)*charX);
 
-    tmp = 1U << (charY - 1);
+	tmp = 1U << (charY - 1);
 
-    for(j = 0; j < charY; j++)
-    {
-        for(i = 0; i < charX; i++)
-        {
-            if(bufTmp1[indexTable[i]] & tmp)
-            {
-                cout << '#';
-            }
-            else
-            {
-                cout << '.';
-            }
+	for(j = 0; j < charY; j++)
+	{
+		for(i = 0; i < charX; i++)
+		{
+			if(bufTmp1[indexTable[i]] & tmp)
+			{
+				cout << '#';
+			}
+			else
+			{
+				cout << '.';
+			}
 
-            bufTmp1[indexTable[i]] <<= 1;
-        }
+			bufTmp1[indexTable[i]] <<= 1;
+		}
 
-        cout << endl;
-    }
+		cout << endl;
+	}
 
-    delete [] bufTmp1;
+	delete [] bufTmp1;
 }
 
 int save_base_file(const char *fileName, const char *baseArray, int baseLen)
 {
-    QFile file(fileName);
-    int tmp[3] = {baseLen, charX, charY};
-    int i;
-    uint32_t *base;
+	QFile file(fileName);
+	int tmp[3] = {baseLen, charX, charY};
+	int i;
+	uint32_t *base;
 
-    if(!file.open(QFile::WriteOnly))
-    {
-        cout << "The file create error." << endl;
+	if(!file.open(QFile::WriteOnly))
+	{
+		cout << "The file create error." << endl;
 
-        return 1;
-    }
+		return 1;
+	}
 
-    file.write((const char *)tmp, sizeof(tmp));
-    file.write(baseArray, baseLen);
-    base = new uint32_t [charX];
+	file.write((const char *)tmp, sizeof(tmp));
+	file.write(baseArray, baseLen);
+	base = new uint32_t [charX];
 
-    for(i = 0; i < baseLen; i++)
-    {
-        get_char(0, i, base);
-        file.write((const char *)base, charX*sizeof(uint32_t));
-        get_char_print(base);
-    }
+	for(i = 0; i < baseLen; i++)
+	{
+		get_char(0, i, base);
+		file.write((const char *)base, charX*sizeof(uint32_t));
+		get_char_print(base);
+	}
 
-    delete [] base;
-    file.flush();
-    file.close();
+	delete [] base;
+	file.flush();
+	file.close();
 
-    return 0;
+	return 0;
 }
 
 int restore_base_file(const char *fileName)
 {
-    QFile file(fileName);
+	QFile file(fileName);
 
-    if(!file.open(QFile::ReadOnly))
-    {
-        cout << "The file open error." << endl;
+	if(!file.open(QFile::ReadOnly))
+	{
+		cout << "The file open error." << endl;
 
-        return 1;
-    }
+		return 1;
+	}
 
-    file.read((char *)&baseLen, sizeof(baseLen));
-    file.read((char *)&charX, sizeof(charX));
-    file.read((char *)&charY, sizeof(charY));
-    baseAscii = new char [baseLen];
-    baseMap = new uint32_t [charX*baseLen];
-    file.read((char *)baseAscii, baseLen);
-    file.read((char *)baseMap, charX*baseLen*4);
-    file.close();
+	file.read((char *)&baseLen, sizeof(baseLen));
+	file.read((char *)&charX, sizeof(charX));
+	file.read((char *)&charY, sizeof(charY));
+	baseAscii = new char [baseLen];
+	baseMap = new uint32_t [charX*baseLen];
+	file.read((char *)baseAscii, baseLen);
+	file.read((char *)baseMap, charX*baseLen*4);
+	file.close();
 
-    return 0;
+	return 0;
 }
 
 int find_pos(void)
 {
-    const color_t *pix;
-    int m, i, j;
-    int count;
+	const color_t *pix;
+	int m, i, j;
+	int count;
 
-    for(m = height-1; m > charY; m--)
-    {
-        // Left lower corner and offset a char '/'.
-        pix = m * width + pix_00 + charX;
-        count = 0;
+	for(m = height-1; m > charY; m--)
+	{
+		// Left lower corner and offset a char '/'.
+		pix = m * width + pix_00 + charX;
+		count = 0;
 
-        for(i = 0; i < width; i++)
-        {
-            if(pix->blue < 0x7F)
-            { // Block pix.
-                count++;
-            }
-            else
-            {
-                if(count == charX)
-                { // Match char width: "AZ-MB".
-                    // Goto 'B' of "YB".
-                    pix -= width * (charY - 3);
+		for(i = 0; i < width; i++)
+		{
+			if(pix->blue < 0x7F)
+			{ // Block pix.
+				count++;
+			}
+			else
+			{
+				if(count == charX)
+				{ // Match char width: "AZ-MB".
+					// Goto 'B' of "YB".
+					pix -= width * (charY - 3);
 
-                    if(pix->blue > 0x7F)
-                    { // White pix.
-                        pix--;
+					if(pix->blue > 0x7F)
+					{ // White pix.
+						pix--;
 
-                        // Match char width: "Y-X".
-                        for(j = 0; j < charX; j++)
-                        {
-                            if(pix->blue > 0x7F)
-                            { // White pix.
-                                goto NEXT;
-                            }
+						// Match char width: "Y-X".
+						for(j = 0; j < charX; j++)
+						{
+							if(pix->blue > 0x7F)
+							{ // White pix.
+								goto NEXT;
+							}
 
-                            pix--;
-                        }
+							pix--;
+						}
 
-                        // At 'A' of "AX".
-                        if(pix->blue > 0x7F)
-                        { // White pix, match "AZ-MB" "BYXA".
+						// At 'A' of "AX".
+						if(pix->blue > 0x7F)
+						{ // White pix, match "AZ-MB" "BYXA".
 
-                            // TODO: match others.
+							// TODO: match others.
 
-                            // Realy pos.
-                            startX = (pix - pix_00) % width;
-                            startY = (pix - pix_00) / width;
-                            // Offset pos.
-                            startX -= charX - 1;
-                            startY -= charY * (bytesOfRow - 1) + 1;
+							// Realy pos.
+							startX = (pix - pix_00) % width;
+							startY = (pix - pix_00) / width;
+							// Offset pos.
+							startX -= charX - 1;
+							startY -= charY * (bytesOfRow - 1) + 1;
 
-                            if((startX < 0) || (startY < 0))
-                            {
-                                cout << "This image is not complete." << endl;
-                                cout << "Pos at: " << startX << "," << startY << endl;
+							if((startX < 0) || (startY < 0))
+							{
+								cout << "This image is not complete." << endl;
+								cout << "Pos at: " << startX << "," << startY << endl;
 
-                                return 1;
-                            }
+								return 1;
+							}
 
-                            cout << "Find Succeed: " << startX << "," << startY << endl;
+							cout << "Find Succeed: " << startX << "," << startY << endl;
 
-                            return 0;
-                        }
-                    }
-                }
+							return 0;
+						}
+					}
+				}
 
 NEXT:
-                // Not match char width.
-                count = 0;
-            }
+				// Not match char width.
+				count = 0;
+			}
 
-            pix++;
-        }
-    }
+			pix++;
+		}
+	}
 
-    cout << "Not find.\n";
+	cout << "Not find.\n";
 
-    return 1;
+	return 1;
 }
 
 void get_data_mode(void)
 {
-    int *p;
-    int i;
+	int *p;
+	int i;
 
-    indexTable = new int [charX];
-    p = indexTable;
+	indexTable = new int [charX];
+	p = indexTable;
 
-    if(charX % 2)
-    {
-        i = charX - 1;
-    }
-    else
-    {
-        i = charX - 2;
-    }
+	if(charX % 2)
+	{
+		i = charX - 1;
+	}
+	else
+	{
+		i = charX - 2;
+	}
 
-    for(; i != -2; i -= 2)
-    {
-        *p++ = i;
-    }
+	for(; i != -2; i -= 2)
+	{
+		*p++ = i;
+	}
 
-    for(i = 1; i < charX; i+= 2);
-    {
-        *p++ = i;
-    }
+	for(i = 1; i < charX; i+= 2);
+	{
+		*p++ = i;
+	}
 }
 
 int compare_base_map(const uint32_t *buf)
 {
-    const uint32_t *mapTmp = baseMap;
-    const uint32_t *bufTmp = buf;
-    int i, j;
+	const uint32_t *mapTmp = baseMap;
+	const uint32_t *bufTmp = buf;
+	int i, j;
 
-    for(i = 0; i < baseLen; i++)
-    {
-        for(j = 0; j < charX; j++)
-        {
-            if(mapTmp[j] != bufTmp[j])
-            {
-                goto NEXT;
-            }
-        }
+	for(i = 0; i < baseLen; i++)
+	{
+		for(j = 0; j < charX; j++)
+		{
+			if(mapTmp[j] != bufTmp[j])
+			{
+				goto NEXT;
+			}
+		}
 
-        break;
+		break;
 
 NEXT:
-        mapTmp += charX;
-    }
+		mapTmp += charX;
+	}
 
-    if(i == baseLen)
-    {
-        //cout << "Scan error." << endl;
-        return -1;
-    }
+	if(i == baseLen)
+	{
+		//cout << "Scan error." << endl;
+		return -1;
+	}
 
-    return baseAscii[i];
+	return baseAscii[i];
 }
 
 // Image recognition.
@@ -392,106 +392,106 @@ NEXT:
 
 int main(int argc, char *argv[])
 {
-    (void)argc;
-    (void)argv;
+	(void)argc;
+	(void)argv;
 
 #if HEX_BIN == 1
-    QFile fileHex(argv[1]);
-    QFile fileBin(QString(argv[1]).replace(".hex", ".bin"));
-    QByteArray ba;
+	QFile fileHex(argv[1]);
+	QFile fileBin(QString(argv[1]).replace(".hex", ".bin"));
+	QByteArray ba;
 
-    fileHex.open(QFile::ReadOnly);
-    fileBin.open(QFile::WriteOnly);
+	fileHex.open(QFile::ReadOnly);
+	fileBin.open(QFile::WriteOnly);
 
-    ba.clear();
+	ba.clear();
 
-    do {
-        fileBin.write(ba);
-        ba = QByteArray::fromHex(fileHex.readLine());
-    } while(!ba.isEmpty());
+	do {
+		fileBin.write(ba);
+		ba = QByteArray::fromHex(fileHex.readLine());
+	} while(!ba.isEmpty());
 
-    fileHex.close();
-    fileBin.flush();
-    fileBin.close();
+	fileHex.close();
+	fileBin.flush();
+	fileBin.close();
 
-    return 0;
+	return 0;
 #endif
 
 #if HEX_BIN == 0
-    QImage baseImage;
+	QImage baseImage;
 
 #if BASE_MODE == 0
-    int i, j;
-    int ret;
-    uint32_t *buf;
-    QString fileName(argv[1]);
-    QString imageName(argv[1]);
-    QFile file(fileName.replace(".PNG", ".hex"));
+	int i, j;
+	int ret;
+	uint32_t *buf;
+	QString fileName(argv[1]);
+	QString imageName(argv[1]);
+	QFile file(fileName.replace(".PNG", ".hex"));
 
-    baseImage.load(imageName);
+	baseImage.load(imageName);
 #else
-    baseImage.load("1.png");
+	baseImage.load("1.png");
 #endif
 
-    width = baseImage.width();
-    height = baseImage.height();
-    cout << "Width: " << width << endl;
-    cout << "Height: " << height << endl;
-    pix_00 = (const color_t *)baseImage.constBits();
-    get_data_mode();
+	width = baseImage.width();
+	height = baseImage.height();
+	cout << "Width: " << width << endl;
+	cout << "Height: " << height << endl;
+	pix_00 = (const color_t *)baseImage.constBits();
+	get_data_mode();
 
 #if BASE_MODE == 1
-    test_print(0, 0, 40, 40);
+	test_print(0, 0, 40, 40);
 #endif
 
-    if(find_pos())
-    {
-        delete [] indexTable;
+	if(find_pos())
+	{
+		delete [] indexTable;
 
-        return 1;
-    }
+		return 1;
+	}
 
 #if BASE_MODE == 1
-    test_print(0, height-40, 40, height-1);
-    save_base_file("1.bin", "0123456789ABCDEF", 16);
+	test_print(0, height-40, 40, height-1);
+	save_base_file("1.bin", "0123456789ABCDEF", 16);
 #else
-    restore_base_file("1.bin");
-    buf = new uint32_t [charX];
-    file.open(QFile::WriteOnly);
+	restore_base_file("1.bin");
+	buf = new uint32_t [charX];
+	file.open(QFile::WriteOnly);
 
-    for(i = 0; i < bytesOfRow-1; i++)
-    {
-        for(j = 0; j < bytesOfColumn; j++)
-        {
-            get_char(i, j, buf);
-            ret = compare_base_map(buf);
+	for(i = 0; i < bytesOfRow-1; i++)
+	{
+		for(j = 0; j < bytesOfColumn; j++)
+		{
+			get_char(i, j, buf);
+			ret = compare_base_map(buf);
 
-            if(ret == -1)
-            {
-                ret = '\n';
-                /* NOTE: ret is a int type, here write 1 byte,
-                   because target CPU is little endian. */
-                file.write((const char *)&ret, 1);
-                file.flush();
-                file.close();
+			if(ret == -1)
+			{
+				ret = '\n';
+				/* NOTE: ret is a int type, here write 1 byte,
+				   because target CPU is little endian. */
+				file.write((const char *)&ret, 1);
+				file.flush();
+				file.close();
 
-                return 0;
-            }
+				return 0;
+			}
 
-            file.write((const char *)&ret, 1);
-        }
+			file.write((const char *)&ret, 1);
+		}
 
-        ret = '\n';
-        file.write((const char *)&ret, 1);
-    }
+		ret = '\n';
+		file.write((const char *)&ret, 1);
+	}
 
-    file.flush();
-    file.close();
+	file.flush();
+	file.close();
 
-    // TODO: can't delete.
-    //delete [] buf;
-    //delete [] indexTable;
-    return 0;
+	// TODO: can't delete.
+	//delete [] buf;
+	//delete [] indexTable;
+	return 0;
 #endif
 #endif
 }
