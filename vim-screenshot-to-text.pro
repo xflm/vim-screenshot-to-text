@@ -3,7 +3,7 @@ QT += gui
 
 CONFIG += c++11
 
-TARGET = untitled
+TARGET = vim-screenshot-to-text
 CONFIG += console
 CONFIG -= app_bundle
 
